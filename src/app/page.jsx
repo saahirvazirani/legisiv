@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import '../components/MainSection.css';
 import '../components/ScrollAnimation.css';
- 
 
 const MainSection = ({ scrollY }) => {
   return (
@@ -27,17 +26,44 @@ const MainSection = ({ scrollY }) => {
   );
 };
 
+const Circle = ({ color, textColor, text, position, scale, opacity }) => (
+  <motion.div
+    className="circle"
+    style={{
+      backgroundColor: color,
+      color: textColor,
+      ...position,
+      scale,
+      opacity,
+    }}
+  >
+    <p>{text}</p>
+    <motion.div
+      className="click-me"
+      style={{
+        position: 'absolute',
+        top: '-30px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        color: textColor,
+        fontWeight: 'bold',
+        opacity,
+      }}
+    >
+      CLICK ME
+    </motion.div>
+  </motion.div>
+);
+
 const Page = () => {
   const [scrollY, setScrollY] = useState(0);
-  const [whiteBackgroundHeight, setWhiteBackgroundHeight] = useState(0);
-  const [blueBackgroundHeight, setBlueBackgroundHeight] = useState(0);
+  const [windowHeight, setWindowHeight] = useState(0);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setIsClient(true);
-      setWhiteBackgroundHeight(1.5 * window.innerHeight);
-      setBlueBackgroundHeight(2.5 * window.innerHeight); // Set the scroll height where blue transition begins
+      setWindowHeight(window.innerHeight);
 
       const handleScroll = () => {
         setScrollY(window.scrollY);
@@ -49,16 +75,24 @@ const Page = () => {
   }, []);
 
   const getBackgroundColor = () => {
-    if (scrollY > blueBackgroundHeight) {
-      return '#000000'; // Black
-    } else if (scrollY > whiteBackgroundHeight) {
-      return '#0362fc'; // Blue
+    if (scrollY > windowHeight * 1.5) {
+      return '#000000';
     } else if (scrollY > 0) {
-      return '#ffffff'; // White
+      return '#ffffff';
     } else {
-      return '#000000'; // Initial black
+      return '#000000';
     }
   };
+
+  const circleScale = Math.min((scrollY / (windowHeight * 0.5)) * 2, 1);
+  const circleOpacity = Math.min((scrollY / (windowHeight * 0.3)), 1);
+  const whiteBackgroundOpacity = Math.max(1 - (scrollY - windowHeight) / (windowHeight * 0.5), 0);
+
+  const circles = [
+    { color: '#7dccff', textColor: 'black', text: 'Bridging the connection between legislation and AI', position: { bottom: '10%', left: '50%', transform: 'translateX(-50%)' } },
+    { color: '#ff7d7d', textColor: 'white', text: 'Empowering citizens with legislative knowledge', position: { top: '20%', left: '20%' } },
+    { color: '#7dff7d', textColor: 'black', text: 'Simplifying complex policies for everyone', position: { top: '20%', right: '20%' } },
+  ];
 
   return (
     <motion.div
@@ -68,39 +102,22 @@ const Page = () => {
       <div className="scroll-animation-container">
         <MainSection scrollY={scrollY} />
         {isClient && (
-          <>
-            <motion.div
-              className="full-screen-white"
-              style={{
-                clipPath: `circle(${(scrollY / window.innerHeight) * 150}% at 50% 100%)`,
-              }}
-            >
-              <motion.div
-                className="blue-circle"
-                style={{
-                  opacity: scrollY > whiteBackgroundHeight + 200 ? 1 : 0,
-                }}
-              >
-                <p>Bridging the connection between legislation and AI</p>
-              </motion.div>
-            </motion.div>
-            <motion.div
-              className="full-screen-blue"
-              style={{
-                clipPath: `circle(${((scrollY - whiteBackgroundHeight) / window.innerHeight) * 150}% at 50% 100%)`,
-                backgroundColor: '#0362fc',
-              }}
-            >
-              <motion.div
-                className="white-circle"
-                style={{
-                  opacity: scrollY > blueBackgroundHeight - 200 ? 1 : 0,
-                }}
-              >
-                <p>Innovative solutions for modern legislation</p>
-              </motion.div>
-            </motion.div>
-          </>
+          <motion.div
+            className="full-screen-white"
+            style={{
+              clipPath: `circle(${circleScale * 150}% at 50% 100%)`,
+              opacity: whiteBackgroundOpacity,
+            }}
+          >
+            {circles.map((circle, index) => (
+              <Circle
+                key={index}
+                {...circle}
+                scale={circleScale}
+                opacity={circleOpacity}
+              />
+            ))}
+          </motion.div>
         )}
       </div>
     </motion.div>

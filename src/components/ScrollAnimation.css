@@ -1,56 +1,58 @@
-/* ScrollAnimation.css */
 .scroll-animation-container {
-    height: 300vh; /* Increase height for more scrolling */
-    position: relative;
-  }
-  
-  .main-section {
-    height: 100vh; /* Ensure it covers the entire viewport */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: black;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .main-content {
-    display: flex;
-    gap: 50px;
-    font-size: 4rem;
-    font-weight: bold;
-    color: white;
-    transition: transform 0.5s ease-in-out;
-  }
-  
-  .full-screen-white {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    z-index: 2;
-  }
-  
-  .blue-circle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 200px;
-    height: 200px;
-    background-color: #7dccff;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-    text-align: center;
-    font-weight: bold;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
+  height: 300vh;
+  position: relative;
+}
 
-  
-  
+.main-section {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  position: relative;
+  overflow: hidden;
+}
+
+.main-content {
+  display: flex;
+  gap: 50px;
+  font-size: 4rem;
+  font-weight: bold;
+  color: white;
+  transition: transform 0.5s ease-in-out;
+}
+
+.full-screen-white {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 2;
+  transition: opacity 0.5s ease-out;
+}
+
+.circle {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: bold;
+  padding: 20px;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  cursor: pointer;
+}
+
+.click-me {
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  from { transform: translateX(-50%) translateY(0); }
+  to { transform: translateX(-50%) translateY(-10px); }
+}
